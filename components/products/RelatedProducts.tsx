@@ -33,7 +33,7 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({
   const router = useRouter();
 
   if (products.length === 0) {
-    return null; // Don't render anything if there are no related products
+    return null;
   }
 
   return (

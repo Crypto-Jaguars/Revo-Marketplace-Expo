@@ -38,7 +38,6 @@ const CartPreviewModal: React.FC<CartPreviewModalProps> = ({
   };
 
   const handleContinueShopping = () => {
-    // Just close the modal
     onClose();
   };
 

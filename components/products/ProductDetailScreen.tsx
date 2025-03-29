@@ -12,7 +12,6 @@ import {
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
-// Import the components
 import ImageGallery from './ImageGallery';
 import RelatedProducts from './RelatedProducts';
 
@@ -506,7 +505,7 @@ const styles = StyleSheet.create({
   },
   addToCartContainer: {
     padding: 16,
-    paddingBottom: 32, // Add extra padding at bottom
+    paddingBottom: 32,
     borderTopWidth: 1,
     borderTopColor: '#F0F0F0',
     backgroundColor: '#FFFFFF',
