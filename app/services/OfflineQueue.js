@@ -20,15 +20,31 @@ export async function clearQueue() {
 
 export async function processQueue(processAction) {
   const queue = await getQueue();
+  const failedActions = [];
+  
   for (const action of queue) {
     try {
       await processAction(action);
     } catch (error) {
       console.error('Failed to process action:', action, error);
-      return; // stop processing on first failure;
+      failedActions.push({ ...action, error: error.message });
+      // Continue processing other actions
     }
   }
-  await clearQueue();
+  
+  if (failedActions.length > 0) {
+    // Save failed actions back to the queue for retry later
+    await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(failedActions));
+    console.log(`${failedActions.length} actions failed and will be retried later.`);
+  } else {
+    // All actions processed successfully, clear the queue
+    await clearQueue();
+  }
+  
+  return { 
+    processed: queue.length - failedActions.length,
+    failed: failedActions.length
+  };
 }
 
 // Automatically process the queue when online.
