@@ -3,7 +3,9 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
@@ -20,6 +22,25 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+// New OfflineBanner component
+function OfflineBanner() {
+  const [isOffline, setIsOffline] = useState(false);
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsOffline(!state.isConnected);
+    });
+    return unsubscribe;
+  }, []);
+  if (!isOffline) return null;
+  return (
+    <View style={{ backgroundColor: 'red', padding: 8 }}>
+      <Text style={{ color: 'white', textAlign: 'center' }}>
+        You are offline. Some features may not be available.
+      </Text>
+    </View>
+  );
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -50,6 +71,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <OfflineBanner />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
@@ -57,3 +79,4 @@ function RootLayoutNav() {
     </ThemeProvider>
   );
 }
+
