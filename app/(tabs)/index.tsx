@@ -24,7 +24,7 @@ const linking = {
 };
 
 export default function TabOneScreen() {
-  const theme = useTheme();
+  //const theme = useTheme();
   return (
     <Tab.Navigator
       screenOptions={{
