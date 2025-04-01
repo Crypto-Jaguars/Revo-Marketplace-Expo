@@ -9,7 +9,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import ProductDetailsScreen from './screens/stack/ProductDetailsScreen';
 import CheckoutScreen from './screens/stack/CheckoutScreen';
 import AuthScreen from './screens/stack/AuthScreen';
-import { useAuth } from '../(path/to)/useAuth';
+import { useAuth } from '../(context)/AuthContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
