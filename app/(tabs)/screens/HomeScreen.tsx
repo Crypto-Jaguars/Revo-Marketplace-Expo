@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons"
 const MOCK_PRODUCTS = [
   {
     id: "1",
-    name: "Organic Apples",
+    name: "Organic Apples 2",
     price: 2.99,
     imageUrl: "https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?q=80&w=300&auto=format",
     farm: "Green Valley Farm",

@@ -56,12 +56,12 @@ function CustomBottomTabBar() {
     },
     {
       name: 'Products',
-      path: '/(tabs)/two',
+      path: '/(tabs)/screens/ProductsScreen',
       icon: 'shopping-basket'
     },
     {
       name: 'Cart',
-      path: '/(tabs)/cart',
+      path: '/(tabs)/cart/cart',
       icon: 'shopping-cart'
     },
     {
@@ -77,7 +77,7 @@ function CustomBottomTabBar() {
         const isActive = pathname === tab.path || pathname.startsWith(`${tab.path}/`);
         
         return (
-          <Link key={tab.name} href={tab.path} asChild>
+          <Link key={tab.name} href={tab.path as any} asChild>
             <TouchableOpacity style={styles.tab}>
               <FontAwesome5 
                 name={tab.icon} 
@@ -133,7 +133,7 @@ function RootLayoutNav() {
         <OfflineBanner />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)/cart/cart" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)/cart/cart" options={{ presentation: 'modal', title: 'Cart' }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
         <CustomBottomTabBar />

@@ -96,6 +96,8 @@ export default function LoginScreen() {
           </Text>
         </TouchableOpacity>
 
+        
+
         <View style={styles.links}>
           <TouchableOpacity onPress={() => router.push('/signup')}>
             <Text style={[styles.link, { color: Colors[colorScheme ?? 'light'].tint }]}>
@@ -108,6 +110,12 @@ export default function LoginScreen() {
               Forgot password?
             </Text>
           </TouchableOpacity>
+          <Text style={[styles.link, { color: Colors[colorScheme ?? 'light'].tint }]}>
+              User test
+              <p>email: test@example.com</p>
+              <p>password: password123</p>
+            </Text>
+        
         </View>
       </View>
     </View>
