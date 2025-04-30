@@ -14,7 +14,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "entitlements": {
+        "keychain-access-groups": ["revofarmers.*", "com.apple.token"]
+      }
     },
     "android": {
       "adaptiveIcon": {
