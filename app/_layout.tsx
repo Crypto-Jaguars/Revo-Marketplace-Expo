@@ -4,9 +4,11 @@ import { useFonts } from 'expo-font';
 import { Redirect, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import 'react-native-reanimated';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { usePathname, Link } from 'expo-router';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -42,6 +44,62 @@ function OfflineBanner() {
   );
 }
 
+// Custom Bottom Tab Bar component
+function CustomBottomTabBar() {
+  const pathname = usePathname();
+  
+  const tabs = [
+    {
+      name: 'Home',
+      path: '/(tabs)',
+      icon: 'home'
+    },
+    {
+      name: 'Products',
+      path: '/(tabs)/two',
+      icon: 'shopping-basket'
+    },
+    {
+      name: 'Cart',
+      path: '/(tabs)/cart',
+      icon: 'shopping-cart'
+    },
+    {
+      name: 'Profile',
+      path: '/(tabs)/profile',
+      icon: 'user'
+    }
+  ];
+
+  return (
+    <View style={styles.tabBarContainer}>
+      {tabs.map((tab) => {
+        const isActive = pathname === tab.path || pathname.startsWith(`${tab.path}/`);
+        
+        return (
+          <Link key={tab.name} href={tab.path} asChild>
+            <TouchableOpacity style={styles.tab}>
+              <FontAwesome5 
+                name={tab.icon} 
+                size={20} 
+                color={isActive ? '#4CAF50' : '#757575'} 
+              />
+              <Text 
+                style={[
+                  styles.tabText, 
+                  { color: isActive ? '#4CAF50' : '#757575' }
+                ]}
+              >
+                {tab.name}
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        );
+      })}
+    </View>
+  );
+}
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -71,13 +129,43 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <OfflineBanner />
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
+      <View style={{ flex: 1 }}>
+        <OfflineBanner />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)/cart/cart" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        </Stack>
+        <CustomBottomTabBar />
+      </View>
       <Redirect href="/(tabs)" />
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBarContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+    height: 60,
+    paddingBottom: 5,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  tab: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8
+  },
+  tabText: {
+    fontSize: 12,
+    marginTop: 3,
+    fontWeight: '500'
+  }
+});
 
