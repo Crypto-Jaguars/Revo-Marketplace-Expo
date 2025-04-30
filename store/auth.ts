@@ -1,6 +1,35 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import * as LocalAuthentication from 'expo-local-authentication';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Wrapper para almacenamiento seguro multiplataforma
+const secureStorage = {
+  async setItem(key: string, value: string) {
+    if (Platform.OS === 'web') {
+      return AsyncStorage.setItem(key, value);
+    } else {
+      return SecureStore.setItemAsync(key, value);
+    }
+  },
+  
+  async getItem(key: string) {
+    if (Platform.OS === 'web') {
+      return AsyncStorage.getItem(key);
+    } else {
+      return SecureStore.getItemAsync(key);
+    }
+  },
+  
+  async removeItem(key: string) {
+    if (Platform.OS === 'web') {
+      return AsyncStorage.removeItem(key);
+    } else {
+      return SecureStore.deleteItemAsync(key);
+    }
+  }
+};
 
 interface User {
   id: string;
@@ -46,8 +75,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   validateToken: async () => {
     try {
-      const token = await SecureStore.getItemAsync(TOKEN_KEY);
-      const expiry = await SecureStore.getItemAsync(TOKEN_EXPIRY_KEY);
+      const token = await secureStorage.getItem(TOKEN_KEY);
+      const expiry = await secureStorage.getItem(TOKEN_EXPIRY_KEY);
       
       if (!token || !expiry) {
         return false;
@@ -73,8 +102,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const newToken = 'test_token_' + Date.now();
       const expiryTime = Date.now() + TOKEN_EXPIRY;
 
-      await SecureStore.setItemAsync(TOKEN_KEY, newToken);
-      await SecureStore.setItemAsync(TOKEN_EXPIRY_KEY, expiryTime.toString());
+      await secureStorage.setItem(TOKEN_KEY, newToken);
+      await secureStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
 
       set({ token: newToken });
     } catch (error) {
@@ -97,9 +126,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const token = 'test_token_' + Date.now();
         const expiryTime = Date.now() + TOKEN_EXPIRY;
 
-        await SecureStore.setItemAsync(TOKEN_KEY, token);
-        await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
-        await SecureStore.setItemAsync(TOKEN_EXPIRY_KEY, expiryTime.toString());
+        await secureStorage.setItem(TOKEN_KEY, token);
+        await secureStorage.setItem(USER_KEY, JSON.stringify(user));
+        await secureStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
 
         set({
           user,
@@ -131,9 +160,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const token = 'test_token_' + Date.now();
       const expiryTime = Date.now() + TOKEN_EXPIRY;
 
-      await SecureStore.setItemAsync(TOKEN_KEY, token);
-      await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
-      await SecureStore.setItemAsync(TOKEN_EXPIRY_KEY, expiryTime.toString());
+      await secureStorage.setItem(TOKEN_KEY, token);
+      await secureStorage.setItem(USER_KEY, JSON.stringify(user));
+      await secureStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
 
       set({
         user,
@@ -151,9 +180,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: async () => {
     try {
-      await SecureStore.deleteItemAsync(TOKEN_KEY);
-      await SecureStore.deleteItemAsync(USER_KEY);
-      await SecureStore.deleteItemAsync(TOKEN_EXPIRY_KEY);
+      await secureStorage.removeItem(TOKEN_KEY);
+      await secureStorage.removeItem(USER_KEY);
+      await secureStorage.removeItem(TOKEN_EXPIRY_KEY);
       
       set({
         user: null,
